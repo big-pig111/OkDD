@@ -394,6 +394,25 @@
         .rule-icon { width:28px; height:28px; border-radius: 50%; background:#111; background-size: cover; background-position: center; }
         .rule-label { font-size: 11px; }
 
+        /* 合约地址展示 */
+        .section-ca { padding-bottom: 8px; }
+        .ca-line { display:flex; align-items:flex-start; gap:8px; flex-wrap: nowrap; }
+        .ca-text {
+            font-family: 'Press Start 2P','VT323','Microsoft YaHei',Arial,sans-serif;
+            font-size: 10px;
+            line-height: 1.35;
+            color:#e0e0e0;
+            word-break: break-all;
+            overflow-wrap: anywhere;
+            white-space: normal;
+            padding: 6px 8px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 8px;
+            flex: 1;
+        }
+        .btn-mini { padding: 4px 8px; font-size: 11px; flex-shrink: 0; }
+
         /* 右下角叠加规则 */
         .rules-overlay { display: none; }
         .rules-inline { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 8px; align-items: center; padding: 6px 0 0; }
@@ -516,6 +535,13 @@
                 <div class="score-actions">
                     <button id="claimBtn" class="btn-ghost">领取代币</button>
                 </div>
+                <div class="score-subtitle">合约地址</div>
+                <div class="score-section section-ca">
+                    <div class="ca-line">
+                        <div id="caText" class="ca-text">0x3F117294175Be36b24Df817F46AF6d1A8C2E5F18</div>
+                        <button id="copyCaBtn" class="btn-ghost btn-mini">复制</button>
+                    </div>
+                </div>
             </section>
             <section class="score-section section-feed">
                 <div class="score-subtitle">最近记录</div>
@@ -564,7 +590,24 @@
         <div class="okx-chip">OKX VIBES • MEME MODE</div>
     </div>
 
-    <script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
+        import { getDatabase, ref as dbRef, push, onChildAdded, onValue, query, limitToLast, runTransaction, set } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
+        import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-functions.js';
+        // Firebase v9 模块化初始化
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5Z5ieEbAcfQX0kxGSn9ldGXhzvAwx_8M",
+            authDomain: "chat-294cc.firebaseapp.com",
+            databaseURL: "https://chat-294cc-default-rtdb.firebaseio.com",
+            projectId: "chat-294cc",
+            storageBucket: "chat-294cc.firebasestorage.app",
+            messagingSenderId: "913615304269",
+            appId: "1:913615304269:web:0274ffaccb8e6b678e4e04",
+            measurementId: "G-SJR9NDW86B"
+        };
+        const appFb = initializeApp(firebaseConfig);
+        const db = getDatabase(appFb);
+        const fx = getFunctions(appFb, 'asia-east1');
         const video = document.getElementById('gachaVideo');
         const button = document.getElementById('gachaButton');
         const status = document.getElementById('status');
@@ -769,47 +812,16 @@
             if (!text) return;
             chatInput.value = '';
             const payload = { user: username, text, ts: Date.now() };
-            if (window.firebase && window.firebase.database) {
-                window.firebase.database().ref('rooms/public/messages').push(payload).catch(console.error);
-            } else {
-                // 无 Firebase 时本地渲染（降级）
-                renderMessage(payload);
-            }
+            push(dbRef(db, 'rooms/public/messages'), payload).catch((err)=>{ console.error(err); renderMessage(payload); });
         }
         chatSend.addEventListener('click', sendMessage);
         chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-        // Firebase 初始化与订阅
-        (function initFirebase() {
-            // 通过 compat 方式引入（在下方CDN脚本加载完成后可用）
-            function start() {
-                if (!window.firebase || !window.firebase.apps) return;
-                if (window.firebase.apps.length === 0) {
-                    const firebaseConfig = {
-                        apiKey: "AIzaSyA5Z5ieEbAcfQX0kxGSn9ldGXhzvAwx_8M",
-                        authDomain: "chat-294cc.firebaseapp.com",
-                        databaseURL: "https://chat-294cc-default-rtdb.firebaseio.com",
-                        projectId: "chat-294cc",
-                        storageBucket: "chat-294cc.firebasestorage.app",
-                        messagingSenderId: "913615304269",
-                        appId: "1:913615304269:web:0274ffaccb8e6b678e4e04",
-                        measurementId: "G-SJR9NDW86B"
-                    };
-                    window.firebase.initializeApp(firebaseConfig);
-                }
-                const ref = window.firebase.database().ref('rooms/public/messages');
-                ref.limitToLast(200).on('child_added', (snap) => {
-                    const data = snap.val();
-                    if (data) renderMessage(data);
-                });
-            }
-            // 若脚本尚未加载，延迟启动
-            if (document.readyState === 'complete') {
-                setTimeout(start, 300);
-            } else {
-                window.addEventListener('load', () => setTimeout(start, 300));
-            }
-        })();
+        // 订阅公共聊天室消息（Firebase v9 模块化）
+        onChildAdded(query(dbRef(db, 'rooms/public/messages'), limitToLast(200)), (snap) => {
+            const data = snap.val();
+            if (data) renderMessage(data);
+        });
 
         // ============== 扭蛋结果：概率与奖励动画 ==============
         // 奖励配置：符号、名称、稀有度class、概率（权重）
@@ -1031,18 +1043,18 @@
         // 初始渲染右下角规则（无需连接钱包）
         renderRulesOverlay();
 
-        // Firebase: 用 Realtime Database 存积分
-        function userRef(addr){ return window.firebase.database().ref('users/'+addr.toLowerCase()); }
-        function scoreRef(addr){ return userRef(addr).child('score'); }
-        function feedRef(addr){ return userRef(addr).child('feed'); }
+        // Firebase: 用 Realtime Database 存积分（模块化）
+        function userRef(addr){ return dbRef(db, 'users/'+addr.toLowerCase()); }
+        function scoreRef(addr){ return dbRef(db, 'users/'+addr.toLowerCase()+'/score'); }
+        function feedRef(addr){ return dbRef(db, 'users/'+addr.toLowerCase()+'/feed'); }
 
         function loadScore(addr){
-            scoreRef(addr).on('value', snap => {
+            onValue(scoreRef(addr), snap => {
                 const total = Number(snap.val() || 0);
                 scoreTotalEl.textContent = total;
                 if (claimBtn) { claimBtn.disabled = !currentAddress || total <= 0; }
             });
-            feedRef(addr).limitToLast(50).on('child_added', snap => {
+            onChildAdded(query(feedRef(addr), limitToLast(50)), snap => {
                 const it = snap.val();
                 const row = document.createElement('div');
                 row.className = 'feed-item';
@@ -1054,13 +1066,13 @@
         }
 
         async function addScoreForReward(reward){
-            if(!currentAddress || !window.firebase) return;
+            if(!currentAddress) return;
             const points = SCORE_MAP[reward.rarity] || 0;
             const addr = currentAddress.toLowerCase();
             const sRef = scoreRef(addr);
             const fRef = feedRef(addr);
-            const tx = await sRef.transaction(v => (v||0) + points);
-            await fRef.push({ ts: Date.now(), token: reward.name, rarity: reward.rarity, points });
+            await runTransaction(sRef, v => (v||0) + points);
+            await push(fRef, { ts: Date.now(), token: reward.name, rarity: reward.rarity, points });
         }
 
         // 玩法介绍渲染（代币图 + 等于多少分）
@@ -1121,14 +1133,13 @@
             if (total <= 0) { alert('当前积分为 0'); return; }
             try {
                 claimBtn.disabled = true; claimBtn.textContent = '领取中...';
-                const functions = window.firebase.functions(window.firebase.app(), 'asia-east1');
-                const convert = functions.httpsCallable('convertPointsToToken');
+                const convert = httpsCallable(fx, 'convertPointsToToken');
                 const res = await convert({ address: currentAddress });
                 const data = res && res.data ? res.data : {};
                 if (data.ok) {
                     alert('领取成功！\nTx: ' + data.txHash);
                     // 本地刷新积分（云函数已清零）
-                    scoreRef(currentAddress.toLowerCase()).set(0);
+                    await set(scoreRef(currentAddress.toLowerCase()), 0);
                 } else {
                     alert('领取失败: ' + (data.error || 'UNKNOWN'));
                 }
@@ -1140,10 +1151,29 @@
                 claimBtn.disabled = !currentAddress || total2 <= 0;
             }
         });
+        // 合约地址复制
+        const copyBtn = document.getElementById('copyCaBtn');
+        const caTextEl = document.getElementById('caText');
+        if (copyBtn && caTextEl) {
+            copyBtn.addEventListener('click', async ()=>{
+                const ca = (caTextEl.textContent || '').trim();
+                try {
+                    await navigator.clipboard.writeText(ca);
+                    copyBtn.textContent = '已复制';
+                    setTimeout(()=>{ copyBtn.textContent = '复制'; }, 1200);
+                } catch (e) {
+                    const tmp = document.createElement('textarea');
+                    tmp.value = ca;
+                    document.body.appendChild(tmp);
+                    tmp.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tmp);
+                    copyBtn.textContent = '已复制';
+                    setTimeout(()=>{ copyBtn.textContent = '复制'; }, 1200);
+                }
+            });
+        }
     </script>
-    <!-- Firebase CDN（compat 版本便于直接在浏览器中使用） -->
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-functions-compat.js"></script>
+    
 </body>
 </html>
