@@ -698,6 +698,11 @@
             }
         });
 
+        // 绑定按钮点击（module 环境下不依赖内联 onclick）
+        button.addEventListener('click', playGacha);
+        // 兼容内联 onclick 调用
+        window.playGacha = playGacha;
+
         // 点击视频也可播放/暂停
         video.addEventListener('click', function() {
             playGacha();
