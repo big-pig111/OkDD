@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>扭蛋机</title>
+    <title>Gachapon Machine</title>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
     <style>
         body {
@@ -19,7 +19,7 @@
             color: #f5f5f5;
         }
 
-        /* 全屏像素化背景画布 */
+        /* Full-screen pixelated background canvas */
         #pixelBg {
             position: fixed;
             inset: 0;
@@ -57,13 +57,13 @@
             -webkit-font-smoothing: none;
             -moz-osx-font-smoothing: grayscale;
             text-rendering: optimizeSpeed;
-            /* 更强像素轮廓效果 */
+            /* Stronger pixel outline effect */
             text-shadow: 0 1px 0 #000, 1px 0 0 #000, 0 -1px 0 #000, -1px 0 0 #000,
                          1px 1px 0 #000, -1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000,
                          0 2px 0 #000, 2px 0 0 #000, 0 -2px 0 #000, -2px 0 0 #000;
         }
 
-        /* OKX风格标题：干净、无阴影、粗体 */
+        /* OKX style title: clean, no shadow, bold */
         .glitch {
             text-shadow: none;
             animation: none;
@@ -88,7 +88,7 @@
             cursor: pointer;
         }
 
-        /* 覆盖视频左上角的主题字样（用于遮住水印） */
+        /* Cover the theme text in the upper left corner of the video (used to cover watermarks) */
         .video-badge {
             position: absolute;
             top: 8px;
@@ -113,7 +113,7 @@
                          0 2px 0 #000, 2px 0 0 #000, 0 -2px 0 #000, -2px 0 0 #000;
         }
 
-        /* meme 字幕 */
+        /* meme captions */
         .meme-caption {
             position: absolute;
             left: 50%;
@@ -136,7 +136,7 @@
         .meme-caption.top { top: 8px; display: none; }
         .meme-caption.bottom { bottom: 8px; }
 
-        /* OKX 黑色方块风按钮 */
+        /* OKX black square style button */
         .gacha-button {
             background: radial-gradient(120% 120% at 30% 30%, #161616 0%, #0f0f0f 60%, #0a0a0a 100%);
             color: #ffffff;
@@ -204,7 +204,7 @@
                          1px 1px 0 #000, -1px 1px 0 #000;
         }
 
-        /* OKX风格标签 */
+        /* OKX style tags */
         .okx-chip {
             display: inline-block;
             padding: 6px 10px;
@@ -318,7 +318,7 @@
             font-family: 'Press Start 2P','VT323', 'Microsoft YaHei', Arial, sans-serif;
         }
 
-        /* ============== 抽奖结果弹窗（稀有度动画） ============== */
+        /* ============== Gacha Result Modal (Rarity Animation) ============== */
         .result-modal.hidden { display: none; }
         .result-modal { position: fixed; inset: 0; z-index: 6; }
         .result-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.55); backdrop-filter: blur(3px); }
@@ -327,7 +327,7 @@
             width: min(420px, 84vw);
             border-radius: 18px;
             border: 1px solid rgba(255,255,255,0.16);
-            /* 正向黑白棋盘格 */
+            /* Forward black and white checkerboard */
             background:
                 conic-gradient(from 90deg,
                     rgba(255,255,255,0.12) 0 25%, transparent 0 50%,
@@ -345,7 +345,7 @@
         .result-title { font-family: 'Press Start 2P','VT323','Microsoft YaHei',Arial,sans-serif; margin-bottom: 10px; }
         .result-item { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; padding: 4px 0 2px; }
         .glass-badge { width: 160px; height: 160px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.32); background: rgba(255,255,255,0.08); backdrop-filter: blur(16px) saturate(120%); display: grid; place-items: center; position: relative; box-shadow: 0 8px 28px rgba(0,0,0,.5), inset 0 0 0 3px rgba(0,0,0,.25); }
-        /* 统一圆形边框为白色，移除橙色等彩色描边 */
+        /* Unify circular borders to white, remove orange and other colored outlines */
         .rarity-mythic .glass-badge,
         .rarity-legendary .glass-badge,
         .rarity-epic .glass-badge,
@@ -358,7 +358,7 @@
         .btn-ghost { border: 1px solid rgba(255,255,255,0.25); background: rgba(0,0,0,0.45); color: #fff; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-family: 'Press Start 2P','VT323','Microsoft YaHei',Arial,sans-serif; backdrop-filter: blur(8px); }
         .btn-ghost:hover { background: rgba(255,255,255,0.08); }
 
-        /* 结果图片（若提供） */
+        /* Result image (if provided) */
         .result-image { width: 76%; height: 76%; object-fit: cover; border-radius: 50%; image-rendering: pixelated; filter: drop-shadow(0 10px 30px rgba(0,0,0,.6)); display: none; }
         .rarity-mythic .result-image { width: 156px; height: 156px; }
         .rarity-legendary .result-image { width: 144px; height: 144px; }
@@ -394,7 +394,7 @@
         .rule-icon { width:28px; height:28px; border-radius: 50%; background:#111; background-size: cover; background-position: center; }
         .rule-label { font-size: 11px; }
 
-        /* 合约地址展示 */
+        /* Contract address display */
         .section-ca { padding-bottom: 8px; }
         .ca-line { display:flex; align-items:flex-start; gap:8px; flex-wrap: nowrap; }
         .ca-text {
@@ -413,7 +413,7 @@
         }
         .btn-mini { padding: 4px 8px; font-size: 11px; flex-shrink: 0; }
 
-        /* 右下角叠加规则 */
+        /* Bottom right overlay rules */
         .rules-overlay { display: none; }
         .rules-inline { display:grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px 8px; align-items: center; padding: 6px 0 0; }
         .rules-inline .o-item { display:flex; align-items:center; gap:5px; }
@@ -423,7 +423,7 @@
         .rules-overlay .o-icon { width:22px; height:22px; border-radius: 50%; background:#111; background-size: cover; background-position:center; }
         .rules-overlay .o-text { font-size: 11px; }
 
-        /* 稀有度主题：统一白色边框，去除彩色描边与发光 */
+        /* Rarity theme: unified white borders, remove colored outlines and glow */
         .rarity-mythic .result-card,
         .rarity-legendary .result-card,
         .rarity-epic .result-card,
@@ -431,12 +431,12 @@
         .rarity-uncommon .result-card,
         .rarity-common .result-card { border-color: rgba(255,255,255,0.16); box-shadow: 0 16px 48px rgba(0,0,0,0.58); }
 
-        /* 粒子与光效容器 */
+        /* Particle and light effect container */
         .result-effects { pointer-events: none; position: absolute; inset: 0; overflow: hidden; }
         .confetti { position: absolute; width: 6px; height: 6px; opacity: .95; transform: translate3d(0,0,0); animation: fall linear forwards; box-shadow: 0 0 0 2px rgba(0,0,0,.4) inset; }
         @keyframes fall { to { transform: translate3d(var(--dx,0px), calc(100vh + 20px), 0) rotate(var(--rot,360deg)); opacity: .9; } }
 
-        /* 光束与脉冲环 */
+        /* Light beams and pulse rings */
         .beam { position:absolute; left:50%; top:50%; width:2px; height:40vmin; transform-origin: center bottom; background: linear-gradient(to top, transparent, rgba(255,255,255,.9)); opacity:.9; mix-blend-mode: screen; }
         .ring { position:absolute; left:50%; top:50%; width:10vmin; height:10vmin; border:2px solid rgba(255,255,255,.8); border-radius:50%; transform: translate(-50%,-50%) scale(.2); opacity:0; animation: ringPulse 1.6s ease-out forwards; mix-blend-mode: screen; }
         @keyframes ringPulse { 20%{opacity:1} 100%{transform: translate(-50%,-50%) scale(2.6); opacity:0} }
@@ -495,98 +495,98 @@
 </head>
 <body>
     <canvas id="pixelBg"></canvas>
-    <!-- 右上角连接钱包按钮与弹窗 -->
-    <button id="walletBtn" class="wallet-btn" title="连接钱包">连接钱包</button>
+    <!-- Top right wallet connect button and modal -->
+    <button id="walletBtn" class="wallet-btn" title="Connect Wallet">Connect Wallet</button>
     <div id="walletModal" class="wallet-modal hidden" aria-hidden="true">
         <div class="wallet-backdrop"></div>
         <div class="wallet-panel" role="dialog" aria-modal="true" aria-labelledby="walletModalTitle">
             <div class="wallet-cardwrap">
                 <div class="wallet-header">
-                    <div id="walletModalTitle" class="wallet-title">选择钱包</div>
-                    <button id="walletClose" class="icon-btn" aria-label="关闭">×</button>
+                    <div id="walletModalTitle" class="wallet-title">Select Wallet</div>
+                    <button id="walletClose" class="icon-btn" aria-label="Close">×</button>
                 </div>
                 <div class="wallet-grid">
                     <button class="wallet-card" id="chooseOkx">
                         <div class="wallet-logo okx"></div>
                         <div class="wallet-name">OKX Wallet</div>
-                        <div class="wallet-desc">连接到 X Layer</div>
+                        <div class="wallet-desc">Connect to X Layer</div>
                     </button>
                     <button class="wallet-card" id="chooseMetamask">
                         <div class="wallet-logo metamask"></div>
                         <div class="wallet-name">MetaMask</div>
-                        <div class="wallet-desc">连接到 X Layer</div>
+                        <div class="wallet-desc">Connect to X Layer</div>
                     </button>
                 </div>
-                <div class="wallet-tip">未安装？OKX: okx.com/web3 · MetaMask: metamask.io</div>
+                <div class="wallet-tip">Not installed? OKX: okx.com/web3 · MetaMask: metamask.io</div>
             </div>
         </div>
     </div>
-    <!-- 侧边聊天栏切换按钮 -->
-    <button id="chatToggle" aria-label="Toggle Chat" title="打开/隐藏聊天" class="chat-toggle">聊</button>
-    <!-- 右侧积分栏（绑定钱包地址） -->
+    <!-- Side chat bar toggle button -->
+    <button id="chatToggle" aria-label="Toggle Chat" title="Open/Hide Chat" class="chat-toggle">Chat</button>
+    <!-- Right side score bar (bound to wallet address) -->
     <aside id="scoreSidebar" class="score-sidebar" aria-label="Score Sidebar">
         <div class="score-header">
-            <div class="score-title">积分</div>
-            <div id="scoreAddr" class="score-addr">未连接</div>
+            <div class="score-title">Score</div>
+            <div id="scoreAddr" class="score-addr">Not Connected</div>
         </div>
         <div class="score-body">
             <section class="score-section section-summary">
                 <div class="score-total" id="scoreTotal">0</div>
                 <div class="score-actions">
-                    <button id="claimBtn" class="btn-ghost">领取代币</button>
+                    <button id="claimBtn" class="btn-ghost">Claim Tokens</button>
                 </div>
-                <div class="score-subtitle">合约地址</div>
+                <div class="score-subtitle">Contract Address</div>
                 <div class="score-section section-ca">
                     <div class="ca-line">
-                        <div id="caText" class="ca-text">0x3F117294175Be36b24Df817F46AF6d1A8C2E5F18</div>
-                        <button id="copyCaBtn" class="btn-ghost btn-mini">复制</button>
+                        <div id="caText" class="ca-text">soon
+                        <button id="copyCaBtn" class="btn-ghost btn-mini">Copy</button>
                     </div>
                 </div>
             </section>
             <section class="score-section section-feed">
-                <div class="score-subtitle">最近记录</div>
+                <div class="score-subtitle">Recent Records</div>
                 <div id="scoreFeed" class="score-feed"></div>
             </section>
             <section class="score-section section-rules">
-                <div class="score-subtitle">玩法介绍 · 抽到=积分</div>
+                <div class="score-subtitle">Game Rules · Draw = Points</div>
                 <div id="scoreRules" class="rules-grid"></div>
                 <div id="rulesInline" class="rules-inline"></div>
             </section>
         </div>
     </aside>
-    <!-- 右下角快速规则展示 -->
+    <!-- Bottom right quick rules display -->
     <div id="rulesOverlay" class="rules-overlay"></div>
 
-    <!-- Telegram风格聊天侧边栏（可隐藏） -->
+    <!-- Telegram style chat sidebar (can be hidden) -->
     <aside id="chatSidebar" class="chat-sidebar open" aria-label="Chat Sidebar">
         <div class="chat-header">
-            <div class="chat-title">聊天室</div>
+            <div class="chat-title">Chat Room</div>
             <div class="chat-actions">
-                <button id="chatClose" class="icon-btn" title="收起">×</button>
+                <button id="chatClose" class="icon-btn" title="Collapse">×</button>
             </div>
         </div>
         <div id="chatMessages" class="chat-messages" role="log" aria-live="polite"></div>
         <div class="chat-input-row">
-            <input id="chatInput" class="chat-input" type="text" placeholder="写点什么… 回车发送" maxlength="500" />
-            <button id="chatSend" class="send-btn">发送</button>
+            <input id="chatInput" class="chat-input" type="text" placeholder="Write something... Press Enter to send" maxlength="500" />
+            <button id="chatSend" class="send-btn">Send</button>
         </div>
     </aside>
     <div class="container">
         <div class="video-container">
             <video id="gachaVideo" width="640" height="360" preload="metadata">
                 <source src="生成扭蛋机动画.mp4" type="video/mp4">
-                您的浏览器不支持视频播放。
+                Your browser does not support video playback.
             </video>
-            <div class="video-badge">扭蛋机</div>
-            <div class="meme-caption top" id="captionTop">今天扭一个亿</div>
-            <div class="meme-caption bottom" id="captionBottom">ALL IN 扭到底</div>
+            <div class="video-badge">Gachapon</div>
+            <div class="meme-caption top" id="captionTop">Today spin for a billion</div>
+            <div class="meme-caption bottom" id="captionBottom">ALL IN spin to the end</div>
         </div>
         
-        <button class="gacha-button" id="gachaButton" onclick="playGacha()">扭动</button>
+        <button class="gacha-button" id="gachaButton" onclick="playGacha()">Spin</button>
         
-        <div class="status" id="status">点击按钮开始扭蛋！</div>
+        <div class="status" id="status">Click the button to start gacha!</div>
 
-        <h1 class="glitch">扭蛋机</h1>
+        <h1 class="glitch">Gachapon Machine</h1>
         <div class="okx-chip">OKX VIBES • MEME MODE</div>
     </div>
 
@@ -594,7 +594,7 @@
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
         import { getDatabase, ref as dbRef, push, onChildAdded, onValue, query, limitToLast, runTransaction, set } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js';
         import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-functions.js';
-        // Firebase v9 模块化初始化
+        // Firebase v9 modular initialization
         const firebaseConfig = {
             apiKey: "AIzaSyA5Z5ieEbAcfQX0kxGSn9ldGXhzvAwx_8M",
             authDomain: "chat-294cc.firebaseapp.com",
@@ -615,7 +615,7 @@
         const captionBottom = document.getElementById('captionBottom');
         let isPlaying = false;
 
-        // 音效：2.mp3 抽奖、1.mp3 中奖
+        // Sound effects: 2.mp3 for drawing, 1.mp3 for winning
         const drawSfx = new Audio('./2.mp3');
         drawSfx.preload = 'auto';
         drawSfx.volume = 0.9;
@@ -630,7 +630,7 @@
                 drawSfx.currentTime = 0;
                 drawSfx.play();
             } catch (e) {}
-            // 抽奖音效最长播放 4.5 秒，避免过长
+            // Drawing sound effect plays for maximum 4.5 seconds to avoid being too long
             drawSfxStopTimer = setTimeout(() => {
                 drawSfx.pause();
                 drawSfx.currentTime = 0;
@@ -648,67 +648,67 @@
 
         function playGacha() {
             if (!isPlaying) {
-                // 开始播放
+                // Start playing
                 video.play();
                 isPlaying = true;
-                button.textContent = '暂停';
-                status.textContent = '扭起来！OKX MEME ON!';
+                button.textContent = 'Pause';
+                status.textContent = 'Let\'s spin! OKX MEME ON!';
                 button.classList.add('spinning');
-                captionTop.textContent = '冲啊！WGMI';
-                captionBottom.textContent = 'Bro trust me 这把稳了';
+                captionTop.textContent = 'Let\'s go! WGMI';
+                captionBottom.textContent = 'Bro trust me this is stable';
                 startDrawSfx();
             } else {
-                // 暂停播放
+                // Pause playing
                 video.pause();
                 isPlaying = false;
-                button.textContent = '扭动';
-                status.textContent = '已暂停，继续ALL IN？';
+                button.textContent = 'Spin';
+                status.textContent = 'Paused, continue ALL IN?';
                 button.classList.remove('spinning');
-                captionTop.textContent = '歇会儿叭';
-                captionBottom.textContent = 'NGMI 但好玩';
+                captionTop.textContent = 'Take a break';
+                captionBottom.textContent = 'NGMI but fun';
                 stopDrawSfx();
             }
         }
 
-        // 视频播放结束时的处理
+        // Handle when video playback ends
         video.addEventListener('ended', function() {
             stopDrawSfx();
             isPlaying = false;
-            button.textContent = '再扭一发';
-            status.textContent = '扭蛋完成！再来一发？';
+            button.textContent = 'Spin Again';
+            status.textContent = 'Gacha complete! Another round?';
             button.classList.remove('spinning');
             captionTop.textContent = 'To The Moon';
-            captionBottom.textContent = '一发入魂 ✅';
+            captionBottom.textContent = 'One shot to the soul ✅';
         });
 
-        // 视频加载完成时的处理
+        // Handle when video metadata is loaded
         video.addEventListener('loadedmetadata', function() {
-            status.textContent = '视频加载完成！点击按钮开始扭蛋！ 🎯';
+            status.textContent = 'Video loaded! Click the button to start gacha! 🎯';
         });
 
-        // 视频播放时的处理
+        // Handle when video starts playing
         video.addEventListener('play', function() {
-            status.textContent = '扭蛋机正在运行中...';
+            status.textContent = 'Gachapon machine is running...';
         });
 
-        // 视频暂停时的处理
+        // Handle when video is paused
         video.addEventListener('pause', function() {
             if (!video.ended) {
-                status.textContent = '扭蛋机已暂停，点击继续！';
+                status.textContent = 'Gachapon machine paused, click to continue!';
             }
         });
 
-        // 绑定按钮点击（module 环境下不依赖内联 onclick）
+        // Bind button click (in module environment, doesn't rely on inline onclick)
         button.addEventListener('click', playGacha);
-        // 兼容内联 onclick 调用
+        // Compatible with inline onclick calls
         window.playGacha = playGacha;
 
-        // 点击视频也可播放/暂停
+        // Click video can also play/pause
         video.addEventListener('click', function() {
             playGacha();
         });
 
-        // 添加键盘快捷键支持
+        // Add keyboard shortcut support
         document.addEventListener('keydown', function(event) {
             if (event.code === 'Space') {
                 event.preventDefault();
@@ -716,7 +716,7 @@
             }
         });
 
-        // 像素化背景渲染（使用 2.png）
+        // Pixelated background rendering (using 2.png)
         (function () {
             const canvas = document.getElementById('pixelBg');
             const ctx = canvas.getContext('2d');
@@ -734,7 +734,7 @@
                     return;
                 }
 
-                // 计算 cover 裁剪
+                // Calculate cover cropping
                 const arImg = img.naturalWidth / img.naturalHeight;
                 const block = Math.max(2, Math.floor(Math.min(vw, vh) / 120));
                 const lowW = Math.max(32, Math.floor(vw / block));
@@ -766,8 +766,8 @@
             draw();
         })();
 
-        // ============== 聊天侧边栏（Firebase Realtime Database） ==============
-        // UI 控制
+        // ============== Chat Sidebar (Firebase Realtime Database) ==============
+        // UI Controls
         const chatSidebar = document.getElementById('chatSidebar');
         const chatToggle = document.getElementById('chatToggle');
         const chatClose = document.getElementById('chatClose');
@@ -781,18 +781,18 @@
         chatToggle.addEventListener('click', toggleChat);
         chatClose.addEventListener('click', closeChat);
 
-        // 保存/获取昵称
+        // Save/get nickname
         function getUsername() {
             let u = localStorage.getItem('chat_username');
             if (!u) {
-                u = prompt('起个名字：') || ('用户' + Math.floor(Math.random()*1000));
+                u = prompt('Choose a name:') || ('User' + Math.floor(Math.random()*1000));
                 localStorage.setItem('chat_username', u);
             }
             return u;
         }
         const username = getUsername();
 
-        // 渲染消息
+        // Render message
         function renderMessage(msg) {
             const wrapper = document.createElement('div');
             const isSelf = msg.user === username;
@@ -801,7 +801,7 @@
             bubble.className = 'bubble';
             const header = document.createElement('div');
             header.className = 'meta';
-            header.textContent = (isSelf ? '我' : msg.user) + ' · ' + new Date(msg.ts || Date.now()).toLocaleTimeString();
+            header.textContent = (isSelf ? 'Me' : msg.user) + ' · ' + new Date(msg.ts || Date.now()).toLocaleTimeString();
             const text = document.createElement('div');
             text.className = 'text';
             text.textContent = msg.text || '';
@@ -822,14 +822,14 @@
         chatSend.addEventListener('click', sendMessage);
         chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
 
-        // 订阅公共聊天室消息（Firebase v9 模块化）
+        // Subscribe to public chat room messages (Firebase v9 modular)
         onChildAdded(query(dbRef(db, 'rooms/public/messages'), limitToLast(200)), (snap) => {
             const data = snap.val();
             if (data) renderMessage(data);
         });
 
-        // ============== 扭蛋结果：概率与奖励动画 ==============
-        // 奖励配置：符号、名称、稀有度class、概率（权重）
+        // ============== Gacha Results: Probability and Reward Animation ==============
+        // Reward configuration: symbol, name, rarity class, probability (weight)
         const REWARDS = [
             { key:'BTC',  name:'BTC',   icon:'₿',   img:'tokens/btc.png',  rarity:'mythic',     weight: 1  },   // 1%
             { key:'OKB',  name:'OKB',   icon:'OKB', img:'tokens/okb.png',  rarity:'legendary', weight: 5  },   // 5%
@@ -839,7 +839,7 @@
             { key:'USDT', name:'USDT',  icon:'₮',   img:'tokens/usdt.png', rarity:'common',     weight: 20 },   // 20%
         ];
 
-        // 计算加权随机
+        // Calculate weighted random
         function pickReward() {
             const total = REWARDS.reduce((s,r)=>s+r.weight,0);
             let r = Math.random()*total;
@@ -847,7 +847,7 @@
             return REWARDS[REWARDS.length-1];
         }
 
-        // 构建结果弹窗DOM
+        // Build result modal DOM
         const resultModal = document.createElement('div');
         resultModal.className = 'result-modal hidden';
         resultModal.innerHTML = `
@@ -855,7 +855,7 @@
             <div class="result-stage">
               <div class="result-card">
                 <div class="result-effects" id="resultEffects"></div>
-                <div class="result-title" id="resultTitle">恭喜获得</div>
+                <div class="result-title" id="resultTitle">Congratulations! You got</div>
                 <div class="result-item">
                   <div class="glass-badge">
                     <img id="resultImg" class="result-image" alt="token" />
@@ -864,8 +864,8 @@
                   <div class="result-name" id="resultName">???</div>
                 </div>
                 <div class="result-actions">
-                  <button class="btn-ghost" id="btnAgain">再扭一次</button>
-                  <button class="btn-ghost" id="btnCloseResult">收起</button>
+                  <button class="btn-ghost" id="btnAgain">Spin Again</button>
+                  <button class="btn-ghost" id="btnCloseResult">Close</button>
                 </div>
               </div>
             </div>`;
@@ -882,7 +882,7 @@
         function showResult(reward){
             const cls = `rarity-${reward.rarity}`;
             resultModal.className = `result-modal ${cls}`;
-            // 尝试显示图片
+            // Try to display image
             const imgEl = resultImg();
             if (reward.img) {
                 imgEl.src = reward.img;
@@ -891,7 +891,7 @@
             } else { imgEl.style.display='none'; resultIcon().style.display='block'; }
             resultIcon().textContent = reward.icon;
             resultName().textContent = reward.name;
-            // 根据稀有度生成不同数量/速度的彩带与光效
+            // Generate different amounts/speeds of confetti and light effects based on rarity
             spawnEffects(reward.rarity);
         }
 
@@ -911,7 +911,7 @@
                 c.style.animationDuration = (8 - Math.min(6, i%6)) + 's';
                 container.appendChild(c);
             }
-            // 光束
+            // Light beams
             const beams = ({mythic:16, legendary:12, epic:8, rare:4, uncommon:2, common:0})[rarity]||0;
             for(let i=0;i<beams;i++){
                 const b = document.createElement('div');
@@ -921,7 +921,7 @@
                 b.style.height = (30 + Math.random()*30) + 'vmin';
                 container.appendChild(b);
             }
-            // 脉冲环
+            // Pulse rings
             const rings = ({mythic:6, legendary:5, epic:4, rare:3, uncommon:2, common:1})[rarity]||1;
             for(let i=0;i<rings;i++){
                 const r = document.createElement('div');
@@ -936,10 +936,10 @@
             const reward = pickReward();
             showResult(reward);
             playWinSfx();
-            // 写入积分
+            // Write score
             addScoreForReward(reward);
-            // 保持原有结束状态更新
-            isPlaying = false; button.textContent='再扭一发'; status.textContent='扭蛋完成！再来一发？'; button.classList.remove('spinning'); captionTop.textContent='To The Moon'; captionBottom.textContent='一发入魂 ✅';
+            // Maintain original end state updates
+            isPlaying = false; button.textContent='Spin Again'; status.textContent='Gacha complete! Another round?'; button.classList.remove('spinning'); captionTop.textContent='To The Moon'; captionBottom.textContent='One shot to the soul ✅';
         });
 
         // “再扭一次”按钮直接重新播放
@@ -948,7 +948,7 @@
             if(e.target && e.target.id==='btnCloseResult'){ hideResult(); }
         });
 
-        // ============== 连接钱包（OKX / MetaMask → X Layer） ==============
+        // ============== Connect Wallet (OKX / MetaMask → X Layer) ==============
         const walletBtn = document.getElementById('walletBtn');
         const walletModal = document.getElementById('walletModal');
         const walletClose = document.getElementById('walletClose');
@@ -961,7 +961,7 @@
         document.querySelector('.wallet-backdrop').addEventListener('click', closeWalletModal);
         walletClose.addEventListener('click', closeWalletModal);
 
-        // X Layer 主网参数（chainId: 196 -> 0xC4）
+        // X Layer mainnet parameters (chainId: 196 -> 0xC4)
         const X_LAYER_PARAMS = {
             chainId: '0xC4',
             chainName: 'X Layer Mainnet',
@@ -974,7 +974,7 @@
             try {
                 await provider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: X_LAYER_PARAMS.chainId }] });
             } catch (err) {
-                // 未添加网络则尝试添加
+                // If network not added, try to add it
                 if (err && err.code === 4902) {
                     await provider.request({ method: 'wallet_addEthereumChain', params: [X_LAYER_PARAMS] });
                 } else {
@@ -992,7 +992,7 @@
             try {
                 await okx.request({ method: 'eth_requestAccounts' });
                 await switchToXLayer(okx);
-                walletBtn.textContent = '已连接 OKX';
+                walletBtn.textContent = 'Connected OKX';
                 walletBtn.classList.add('connected');
                 closeWalletModal();
             } catch (e) { console.error(e); }
@@ -1004,7 +1004,7 @@
             try {
                 await mm.request({ method: 'eth_requestAccounts' });
                 await switchToXLayer(mm);
-                walletBtn.textContent = '已连接 MetaMask';
+                walletBtn.textContent = 'Connected MetaMask';
                 walletBtn.classList.add('connected');
                 closeWalletModal();
             } catch (e) { console.error(e); }
@@ -1013,14 +1013,14 @@
         chooseOkx.addEventListener('click', connectOkx);
         chooseMetamask.addEventListener('click', connectMetamask);
 
-        // ============== 右侧栏：积分与领取（Firebase 绑定钱包地址） ==============
+        // ============== Right sidebar: Score and Claim (Firebase bound to wallet address) ==============
         const scoreAddrEl = document.getElementById('scoreAddr');
         const scoreTotalEl = document.getElementById('scoreTotal');
         const scoreFeedEl = document.getElementById('scoreFeed');
         const claimBtn = document.getElementById('claimBtn');
         let currentAddress = null;
 
-        // 映射奖励 -> 积分（由高到低：10万、2.5万、3000、1000、500）
+        // Map rewards -> points (from high to low: 100k, 25k, 3k, 1k, 500)
         const SCORE_MAP = {
             mythic: 100000,
             legendary: 25000,
@@ -1030,25 +1030,25 @@
             common: 500,
         };
 
-        // 绑定地址展示
-        function setAddress(addr){ currentAddress = addr; scoreAddrEl.textContent = addr ? (addr.slice(0,6)+'...'+addr.slice(-4)) : '未连接'; if(addr){ loadScore(addr); } }
+        // Bind address display
+        function setAddress(addr){ currentAddress = addr; scoreAddrEl.textContent = addr ? (addr.slice(0,6)+'...'+addr.slice(-4)) : 'Not Connected'; if(addr){ loadScore(addr); } }
 
-        // 当连接钱包成功时，设置地址
+        // When wallet connection is successful, set the address
         const originalConnectOkx = connectOkx;
         const originalConnectMetamask = connectMetamask;
 
         async function connectOkxWrapped(){ await originalConnectOkx(); try{ const okx = window.okxwallet || window.okxwallet?.ethereum; const accs = await okx.request({method:'eth_accounts'}); setAddress(accs?.[0]||null);}catch(e){} }
         async function connectMetamaskWrapped(){ await originalConnectMetamask(); try{ const mm = window.ethereum; const accs = await mm.request({method:'eth_accounts'}); setAddress(accs?.[0]||null);}catch(e){} }
 
-        // 覆盖事件绑定
+        // Override event binding
         chooseOkx.removeEventListener('click', connectOkx);
         chooseOkx.addEventListener('click', connectOkxWrapped);
         chooseMetamask.removeEventListener('click', connectMetamask);
         chooseMetamask.addEventListener('click', connectMetamaskWrapped);
-        // 初始渲染右下角规则（无需连接钱包）
+        // Initial render of bottom right rules (no wallet connection needed)
         renderRulesOverlay();
 
-        // Firebase: 用 Realtime Database 存积分（模块化）
+        // Firebase: Use Realtime Database to store scores (modular)
         function userRef(addr){ return dbRef(db, 'users/'+addr.toLowerCase()); }
         function scoreRef(addr){ return dbRef(db, 'users/'+addr.toLowerCase()+'/score'); }
         function feedRef(addr){ return dbRef(db, 'users/'+addr.toLowerCase()+'/feed'); }
@@ -1080,7 +1080,7 @@
             await push(fRef, { ts: Date.now(), token: reward.name, rarity: reward.rarity, points });
         }
 
-        // 玩法介绍渲染（代币图 + 等于多少分）
+        // Game rules rendering (token image + equals how many points)
         function renderRules(){
             const grid = document.getElementById('scoreRules');
             if(!grid) return;
@@ -1106,7 +1106,7 @@
                 card.appendChild(icon); card.appendChild(label);
                 grid.appendChild(card);
             }
-            // 同步右下角覆盖层
+            // Synchronize bottom right overlay
             renderRulesOverlay();
         }
 
@@ -1131,32 +1131,32 @@
             }
         }
 
-        // 领取代币：调用云函数 convertPointsToToken（1积分=1代币）
+        // Claim tokens: Call cloud function convertPointsToToken (1 point = 1 token)
         claimBtn.addEventListener('click', async ()=>{
-            if(!currentAddress){ alert('请先连接钱包'); return; }
+            if(!currentAddress){ alert('Please connect wallet first'); return; }
             const total = Number(scoreTotalEl.textContent || 0);
-            if (total <= 0) { alert('当前积分为 0'); return; }
+            if (total <= 0) { alert('Current score is 0'); return; }
             try {
-                claimBtn.disabled = true; claimBtn.textContent = '领取中...';
+                claimBtn.disabled = true; claimBtn.textContent = 'Claiming...';
                 const convert = httpsCallable(fx, 'convertPointsToToken');
                 const res = await convert({ address: currentAddress });
                 const data = res && res.data ? res.data : {};
                 if (data.ok) {
-                    alert('领取成功！\nTx: ' + data.txHash);
-                    // 本地刷新积分（云函数已清零）
+                    alert('Claim successful!\nTx: ' + data.txHash);
+                    // Local refresh score (cloud function already cleared)
                     await set(scoreRef(currentAddress.toLowerCase()), 0);
                 } else {
-                    alert('领取失败: ' + (data.error || 'UNKNOWN'));
+                    alert('Claim failed: ' + (data.error || 'UNKNOWN'));
                 }
             } catch (e) {
-                alert('调用失败: ' + (e.message || e));
+                alert('Call failed: ' + (e.message || e));
             } finally {
-                claimBtn.textContent = '领取代币';
+                claimBtn.textContent = 'Claim Tokens';
                 const total2 = Number(scoreTotalEl.textContent || 0);
                 claimBtn.disabled = !currentAddress || total2 <= 0;
             }
         });
-        // 合约地址复制
+        // Contract address copy
         const copyBtn = document.getElementById('copyCaBtn');
         const caTextEl = document.getElementById('caText');
         if (copyBtn && caTextEl) {
@@ -1164,8 +1164,8 @@
                 const ca = (caTextEl.textContent || '').trim();
                 try {
                     await navigator.clipboard.writeText(ca);
-                    copyBtn.textContent = '已复制';
-                    setTimeout(()=>{ copyBtn.textContent = '复制'; }, 1200);
+                    copyBtn.textContent = 'Copied';
+                    setTimeout(()=>{ copyBtn.textContent = 'Copy'; }, 1200);
                 } catch (e) {
                     const tmp = document.createElement('textarea');
                     tmp.value = ca;
@@ -1173,8 +1173,8 @@
                     tmp.select();
                     document.execCommand('copy');
                     document.body.removeChild(tmp);
-                    copyBtn.textContent = '已复制';
-                    setTimeout(()=>{ copyBtn.textContent = '复制'; }, 1200);
+                    copyBtn.textContent = 'Copied';
+                    setTimeout(()=>{ copyBtn.textContent = 'Copy'; }, 1200);
                 }
             });
         }
